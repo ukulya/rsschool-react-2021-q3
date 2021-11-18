@@ -21,7 +21,9 @@ function Home(){
         Accept: 'application/json',
         Authorization: 'Bearer 5dzTQnD3A73gjpV9SlQa',
       }
-      fetch(`https://the-one-api.dev/v2/book?name=${searchName}`, {
+      // fetch(`https://the-one-api.dev/v2/book/${searchName}`, {
+      // fetch(`https://the-one-api.dev/v2/book?name=${searchName}`, {
+      fetch(`https://the-one-api.dev/v2/book?race=${searchName}`, {
         method: 'GET',
         headers: headers,
       })
@@ -54,12 +56,57 @@ function Home(){
     }
   
     const sortByNameASC = (e) => {
-      setBooks(books.sort((a, b) => a.name > b.name))
-      console.log(e)
+      fetch(`https://the-one-api.dev/v2/book?sort=name:asc`, {
+        method: 'GET',
+      })
+        .then((res) => {
+          if (!res.ok) {
+            throw Error('could not fetch the data')
+          }
+          return res.json()
+        })
+        .then((data) => {
+          const dataDocs = data.docs
+          setData(dataDocs)
+          setIsPending(false)
+          setError(null)
+        })
+        .catch((err) => {
+          console.log(err.message)
+          if (err.name === 'AbortError') {
+            console.log('fetch aborted')
+          } else {
+            setError(err.message)
+            setIsPending(false)
+          }
+        })
     }
   
     const sortByNameDESC = () => {
-      setBooks(books.sort((a, b) => a.name < b.name))
+      fetch(`https://the-one-api.dev/v2/book?sort=name:desc`, {
+        method: 'GET',
+      })
+        .then((res) => {
+          if (!res.ok) {
+            throw Error('could not fetch the data')
+          }
+          return res.json()
+        })
+        .then((data) => {
+          const dataDocs = data.docs
+          setData(dataDocs)
+          setIsPending(false)
+          setError(null)
+        })
+        .catch((err) => {
+          console.log(err.message)
+          if (err.name === 'AbortError') {
+            console.log('fetch aborted')
+          } else {
+            setError(err.message)
+            setIsPending(false)
+          }
+        })
     }
     return<div>
     <Search handleInput={handleInput} onSubmit={onSubmit} />
